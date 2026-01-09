@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Siemens – MPT Current</title>
+
+<style>
+:root {
+  --siemens-purple: #6f2dbd;
+  --light-gray: #f4f4f4;
+  --danger-red: #c62828;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 10px;
+  background: #ffffff;
+}
+
+.header {
+  text-align: center;
+  padding: 8px;
+  background: var(--siemens-purple);
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  border-radius: 6px;
+}
+
+.container {
+  margin-top: 10px;
+}
+
+input {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  margin-bottom: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  background: var(--siemens-purple);
+  color: white;
+  border: none;
+  border-radius: 6px;
+  margin-bottom: 8px;
+}
+
+.result {
+  margin-top: 6px;
+  padding: 10px 12px;
+  background: var(--light-gray);
+  border-radius: 5px;
+  font-size: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.result span {
+  font-weight: bold;
+  white-space: nowrap;
+}
+
+.warning {
+  background: #ffecec;
+  color: var(--danger-red);
+  font-weight: bold;
+}
+</style>
+</head>
+
+<body>
+
+<div class="header">
+  Siemens – MPT Current
+</div>
+
+<div class="container">
+
+  <input type="number" id="length" placeholder="Blade Length (mm)" inputmode="numeric">
+  <input type="number" id="width" placeholder="Blade Width (mm)" inputmode="numeric">
+
+  <button onclick="calculate()">CALCULATE</button>
+
+  <div class="result" id="min">Minimum Current <span>– A</span></div>
+  <div class="result" id="max">Maximum Current <span>– A</span></div>
+  <div class="result" id="circ">Circular Magnetization <span>– A</span></div>
+  <div class="result" id="long">Longitudinal Magnetization <span>– A</span></div>
+
+</div>
+
+<script>
+function calculate() {
+  const length_mm = parseFloat(document.getElementById("length").value);
+  const width_mm = parseFloat(document.getElementById("width").value);
+
+  if (isNaN(length_mm) || isNaN(width_mm) || width_mm === 0) {
+    alert("Enter valid Length and Width");
+    return;
+  }
+
+  const length_in = length_mm / 25.4;
+  const width_in = width_mm / 25.4;
+  const ratio = length_in / width_in;
+
+  let base = null;
+  if (ratio >= 4) {
+    base = 35000 / (ratio + 2);
+  } else if (ratio >= 2) {
+    base = 45000 / ratio;
+  }
+
+  let rounded = null;
+  if (base !== null) {
+    rounded = Math.round(base / 5);
+  }
+
+  const min = document.getElementById("min");
+  const max = document.getElementById("max");
+  const circ = document.getElementById("circ");
+  const longi = document.getElementById("long");
+
+  if (rounded === null) {
+    min.innerHTML = "Minimum Current <span>Not Recommended</span>";
+    max.innerHTML = "Maximum Current <span>Not Recommended</span>";
+    min.classList.add("warning");
+    max.classList.add("warning");
+  } else {
+    min.innerHTML = `Minimum Current <span>${Math.round(rounded * 0.9)} A</span>`;
+    max.innerHTML = `Maximum Current <span>${Math.round(rounded * 1.1)} A</span>`;
+    min.classList.remove("warning");
+    max.classList.remove("warning");
+  }
+
+  circ.innerHTML = `Circular Magnetization <span>${Math.round(width_in * 300)} A</span>`;
+  longi.innerHTML = `Longitudinal Magnetization <span>${Math.round(width_in * 800)} A</span>`;
+}
+</script>
+
+</body>
+</html>
