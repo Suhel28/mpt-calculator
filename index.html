@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Siemens – MPT Current</title>
+<title>MPT Current Calculator</title>
 
 <style>
 :root {
@@ -90,10 +90,10 @@ button {
 
   <button onclick="calculate()">CALCULATE</button>
 
-  <div class="result" id="min">Minimum Current <span>– A</span></div>
-  <div class="result" id="max">Maximum Current <span>– A</span></div>
-  <div class="result" id="circ">Circular Magnetization <span>– A</span></div>
-  <div class="result" id="long">Longitudinal Magnetization <span>– A</span></div>
+  <div class="result" id="min">Min. Coil Shot Current <span>– A</span></div>
+  <div class="result" id="max">Max. Coil Shot Current<span>– A</span></div>
+  <div class="result" id="circ">Min. Head  Shot Current <span>– A</span></div>
+  <div class="result" id="long">Max. Head  Shot Current <span>– A</span></div>
 
 </div>
 
@@ -129,21 +129,22 @@ function calculate() {
   const longi = document.getElementById("long");
 
   if (rounded === null) {
-    min.innerHTML = "Minimum Current <span>Not Recommended</span>";
-    max.innerHTML = "Maximum Current <span>Not Recommended</span>";
+    min.innerHTML = "Min. Coil Shot Current <span>Not Recommended</span>";
+    max.innerHTML = "Max. Coil Shot Current<span>Not Recommended</span>";
     min.classList.add("warning");
     max.classList.add("warning");
   } else {
-    min.innerHTML = `Minimum Current <span>${Math.round(rounded * 0.9)} A</span>`;
-    max.innerHTML = `Maximum Current <span>${Math.round(rounded * 1.1)} A</span>`;
+    min.innerHTML = `Min. Coil Shot Current <span>${Math.round(rounded * 0.9)} A</span>`;
+    max.innerHTML = `Max. Coil Shot Current<span>${Math.round(rounded * 1.1)} A</span>`;
     min.classList.remove("warning");
     max.classList.remove("warning");
   }
 
-  circ.innerHTML = `Circular Magnetization <span>${Math.round(width_in * 300)} A</span>`;
-  longi.innerHTML = `Longitudinal Magnetization <span>${Math.round(width_in * 800)} A</span>`;
+  circ.innerHTML = `Min. Head  Shot Current <span>${Math.round(width_in * 300)} A</span>`;
+  longi.innerHTML = `Max. Head  Shot Current <span>${Math.round(width_in * 800)} A</span>`;
 }
 </script>
 
 </body>
 </html>
+
